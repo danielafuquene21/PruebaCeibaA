@@ -8,11 +8,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import java.util.ArrayList;
 
 import co.com.ceiba.mobile.pruebadeingreso.R;
 import co.com.ceiba.mobile.pruebadeingreso.dataObject.User;
 import co.com.ceiba.mobile.pruebadeingreso.rest.Const;
+import co.com.ceiba.mobile.pruebadeingreso.view.MainActivity;
 import co.com.ceiba.mobile.pruebadeingreso.view.PostActivity;
 
 public class UserAdapterList extends RecyclerView.Adapter<UserAdapterList.UserViewHolder>{

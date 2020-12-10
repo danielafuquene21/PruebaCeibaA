@@ -6,13 +6,17 @@ import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -31,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import co.com.ceiba.mobile.pruebadeingreso.adapter.EmptyListAdapter;
 import co.com.ceiba.mobile.pruebadeingreso.adapter.UserAdapterList;
 import co.com.ceiba.mobile.pruebadeingreso.dataObject.User;
 import co.com.ceiba.mobile.pruebadeingreso.R;
@@ -46,30 +51,22 @@ import okhttp3.ResponseBody;
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends Activity {
-
-
     private EditText editTextSearch;
     private RecyclerView recyclerViewSearchResults;
     private ArrayList<User> listaUser = new ArrayList<User>();
-
-
-    private ArrayList<User> listaUserPrueba = new ArrayList<User>();
-
     private GridLayoutManager glm;
     private UserAdapterList adapter;
+    private EmptyListAdapter emptyAdapter;
     ArrayList<String> a = new ArrayList<String>();
     boolean load = false;
-
     public String json = "";
-
     SharedPreferences sharedPreferences;
-
     ProgressDialog progressDialog;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         cargarVista();
         validarDatos();
     }
@@ -89,7 +86,6 @@ public class MainActivity extends Activity {
             JSONArray newJArray = new JSONArray(json);
             json = newJArray.toString();
             cargarJsonArray(newJArray);
-            //Toast.makeText(MainActivity.this,listaUser.toString(),Toast.LENGTH_LONG).show();
             llenarListView(listaUser);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -130,7 +126,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        //validarDatos();
     }
 
     private void cargarListaUsuarios() {
@@ -156,39 +151,27 @@ public class MainActivity extends Activity {
 
                     @Override
                     public void onResponse(Call call, final Response response) throws IOException {
-
                         final String myResponse = response.body().string();
-
                         MainActivity.this.runOnUiThread(new Runnable() {
-
-
                             @Override
                             public void run() {
-
                                 JSONArray jsonarray = null;
                                 User user = null;
                                 json = "";
                                 try {
                                     jsonarray = new JSONArray(myResponse);
                                     json = jsonarray.toString();
-
-
-                                    for(int i=0;i<jsonarray.length();i++)
-                                    {
+                                    for(int i=0;i<jsonarray.length();i++) {
                                         User u = new User();
                                         JSONObject item = (JSONObject) jsonarray.get(i);
-
                                         u.setName(item.getString(Const.OBJ_USER_NAME));
                                         u.setId((Integer.parseInt(item.getString(Const.OBJ_USER_ID)))) ;
                                         u.setUsername(item.getString(Const.OBJ_USER_USERNAME));
                                         u.setEmail(item.getString(Const.OBJ_USER_EMAIL));
                                         u.setPhone(item.getString(Const.OBJ_USER_PHONE));
                                         u.setWebsite(item.getString(Const.OBJ_USER_WEBSITE));
-
                                         listaUser.add(u);
-
                                     }
-
                                     llenarListView(listaUser);
                                     if (progressDialog != null)
                                         progressDialog.cancel();
@@ -200,18 +183,13 @@ public class MainActivity extends Activity {
                                 }
                             }
                         });
-
                     }
                 });
             }
         }).start();
-
-
-
     }
 
-    private void llenarListView(ArrayList<User> listaResponse)
-    {
+    private void llenarListView(ArrayList<User> listaResponse) {
         adapter = new UserAdapterList(listaResponse, getApplicationContext());
         recyclerViewSearchResults.setAdapter(adapter);
     }
@@ -219,46 +197,40 @@ public class MainActivity extends Activity {
     private void cargarVista() {
         editTextSearch = (EditText) findViewById(R.id.editTextSearch);
         recyclerViewSearchResults = (RecyclerView) findViewById(R.id.recyclerViewSearchResults);
-
         glm = new GridLayoutManager(this, 1);
         recyclerViewSearchResults.setLayoutManager(glm);
         recyclerViewSearchResults.setAdapter(adapter);
-
         editTextSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
             public void afterTextChanged(Editable e) {
-
                 filterList(e.toString());
             }
         });
-
         sharedPreferences  = getSharedPreferences("Json_user", MODE_PRIVATE);
     }
 
     private  void filterList (String text){
         ArrayList<User> filterNames= new ArrayList<>();
-
-        for(User s : listaUser){
-            if(s.getName().toLowerCase().contains(text.toLowerCase())){
+        for(User s : listaUser)
+            if(s.getName().toLowerCase().contains(text.toLowerCase()))
                 filterNames.add(s);
-            }
-        }
+
         if(filterNames.size() == 0){
-
+            emptyAdapter = new EmptyListAdapter(getApplicationContext());
+            recyclerViewSearchResults.setAdapter(emptyAdapter);
+        }else{
+            recyclerViewSearchResults.setAdapter(adapter);
+            adapter.filterList(filterNames);
         }
-        adapter.filterList(filterNames);
     }
-
     @Override
     protected void onStart() {
         super.onStart();
