@@ -23,12 +23,12 @@ class MainActivityTestEspresso {
 
     @Test
     public void recyclTest(){
-        onView(withId(R.id.recyclerViewSearchResults)).check(new RecyclerViewItemCountAssertion(10));
+        onView(withId(R.id.recyclerViewSearchResults)).check(new RecyclerViewItem(10));
     }
-    public class RecyclerViewItemCountAssertion implements ViewAssertion {
+    public class RecyclerViewItem implements ViewAssertion {
         private final int expectedCount;
 
-        public RecyclerViewItemCountAssertion(int expectedCount) {
+        public RecyclerViewItem(int expectedCount) {
             this.expectedCount = expectedCount;
         }
         @Override
