@@ -5,9 +5,7 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +16,6 @@ import java.util.ArrayList;
 
 import co.com.ceiba.mobile.pruebadeingreso.R;
 import co.com.ceiba.mobile.pruebadeingreso.adapter.PostAdapterList;
-import co.com.ceiba.mobile.pruebadeingreso.adapter.UserAdapterList;
 import co.com.ceiba.mobile.pruebadeingreso.dataObject.Post;
 import co.com.ceiba.mobile.pruebadeingreso.dataObject.User;
 import co.com.ceiba.mobile.pruebadeingreso.rest.Const;
@@ -35,7 +32,7 @@ public class PostActivity extends Activity {
     private TextView email;
     User user;
     private RecyclerView recyclerViewPostsResults;
-    private ArrayList<Post> listaPost;
+    private ArrayList<Post> postList;
     private GridLayoutManager glm;
     private PostAdapterList adapter;
     ProgressDialog progressDialog;
@@ -44,10 +41,10 @@ public class PostActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
         getExtras();
-        cargarVista();
-        cargarPost();
+        loadView();
+        loadPost();
     }
-    private void cargarPost(){
+    private void loadPost(){
         progressDialog = ProgressDialog.show(PostActivity.this, Const.VACIO,
                 Const.PROGRESS_DIALOG, false);
         progressDialog.show();
@@ -73,7 +70,7 @@ public class PostActivity extends Activity {
                                 JSONArray jsonarray = null;
                                 try {
                                     jsonarray = new JSONArray(myResponse);
-                                    listaPost = new ArrayList<Post>();
+                                    postList = new ArrayList<Post>();
                                     for(int i=0;i<jsonarray.length();i++) {
                                         Post p = new Post();
                                         JSONObject item = (JSONObject) jsonarray.get(i);
@@ -81,9 +78,9 @@ public class PostActivity extends Activity {
                                         p.setUserId(item.getString(Const.OBJ_POST_USERID));
                                         p.setTitle(item.getString(Const.OBJ_POST_TITLE));
                                         p.setBody(item.getString(Const.OBJ_POST_BODY));
-                                        listaPost.add(p);
+                                        postList.add(p);
                                     }
-                                    llenarListView(listaPost);
+                                    fillListView(postList);
                                     if (progressDialog != null)
                                         progressDialog.cancel();
                                 } catch (JSONException e) {
@@ -97,7 +94,7 @@ public class PostActivity extends Activity {
         }).start();
     }
 
-    private void llenarListView(ArrayList<Post> listaResponse) {
+    private void fillListView(ArrayList<Post> listaResponse) {
         adapter = new PostAdapterList(listaResponse, getApplicationContext());
         recyclerViewPostsResults.setAdapter(adapter);
     }
@@ -111,7 +108,7 @@ public class PostActivity extends Activity {
         }
     }
 
-    private void cargarVista() {
+    private void loadView() {
         name =  (TextView) findViewById(R.id.name);
         phone =  (TextView) findViewById(R.id.phone);
         email =  (TextView) findViewById(R.id.email);

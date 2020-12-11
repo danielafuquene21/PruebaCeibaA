@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import co.com.ceiba.mobile.pruebadeingreso.R;
 
 public class EmptyListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private Context contexto;
+    private Context context;
     public EmptyListAdapter(Context applicationContext) {
-        this.contexto = applicationContext;
+        this.context = applicationContext;
     }
 
 

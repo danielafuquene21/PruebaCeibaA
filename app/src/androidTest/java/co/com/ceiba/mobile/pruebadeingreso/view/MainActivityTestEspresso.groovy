@@ -12,9 +12,14 @@ import lombok.experimental.var
 import org.junit.Rule
 import org.junit.Test
 
-class MainActivityTest {
+class MainActivityTestEspresso {
     @Rule
     public ActivityTestRule<MainActivity> mTestRule = new ActivityTestRule<>(MainActivity.class);
+
+    @Test
+    public void visibilityViewCardUser(){
+        onView(withId(R.id.user_list_item)).check(doesNotExist());
+    }
 
     @Test
     public void recyclTest(){

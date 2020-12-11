@@ -44,11 +44,8 @@ public class PostAdapterList  extends RecyclerView.Adapter<PostAdapterList.PostV
     }
 
     class PostViewHolder extends RecyclerView.ViewHolder{
-
         TextView title;
         TextView body;
-
-
         public PostViewHolder(View itemView) {
             super(itemView);
             title = (TextView) itemView.findViewById(R.id.title);

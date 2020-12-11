@@ -8,25 +8,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import co.com.ceiba.mobile.pruebadeingreso.R;
 import co.com.ceiba.mobile.pruebadeingreso.dataObject.User;
 import co.com.ceiba.mobile.pruebadeingreso.rest.Const;
-import co.com.ceiba.mobile.pruebadeingreso.view.MainActivity;
 import co.com.ceiba.mobile.pruebadeingreso.view.PostActivity;
 
 public class UserAdapterList extends RecyclerView.Adapter<UserAdapterList.UserViewHolder>{
 
     private ArrayList<User> data;
-    private Context contexto;
+    private Context context;
 
 
     public UserAdapterList(ArrayList<User> data, Context applicationContext) {
         this.data = data;
-        this.contexto = applicationContext;
+        this.context = applicationContext;
 
     }
 
@@ -45,9 +43,10 @@ public class UserAdapterList extends RecyclerView.Adapter<UserAdapterList.UserVi
         holder.btn_view_post.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent  intent = new Intent(contexto, PostActivity.class);
+                Intent  intent = new Intent(context, PostActivity.class);
                 intent.putExtra(Const.KEY_INTENT_USERPOST, userViewHolder);
-                contexto.startActivity(intent);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
 
             }
         });
