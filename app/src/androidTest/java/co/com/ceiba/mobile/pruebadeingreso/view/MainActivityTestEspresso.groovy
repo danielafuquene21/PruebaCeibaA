@@ -24,8 +24,6 @@ class MainActivityTestEspresso {
     @Test
     public void recyclTest(){
         onView(withId(R.id.recyclerViewSearchResults)).check(new RecyclerViewItemCountAssertion(10));
-        /*Espresso.onView(withId(R.id.recyclerViewSearchResults))
-        .perform(RecyclerViewActions.actionOnItem()*/
     }
     public class RecyclerViewItemCountAssertion implements ViewAssertion {
         private final int expectedCount;
